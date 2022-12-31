@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="index.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Weather App</a>
+          <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button> -->
+          <!-- <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown link
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div> -->
+        </div>
+      </nav>
+    <!-- Search Bar -->
+    <div class="container mt-5 mb-5">
+        <form method="POST" id="weather-form">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 col-12">
+                <input required id="city" type="text" placeholder="Enter your city" class="form-control mt-4" >
+            </div>
+            <div class="col-md-3 col-lg-3 col-12">
+                <select class="form-select mt-4" id="aqi">
+                    <option disabled selected>AQI Report</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12">
+                <button type="submit" class="btn btn-primary form-control mt-4">Search</button>
+            </div>
+        </div>
+    </form>
+    </div>
+    <!-- Result Section -->
+    <div class="container mt-5 mb-5">
+        <div id="weather-result" style="display: none;">
+            <table>
+                <tr>
+                    <th>City</th>
+                    <td id="city-name"></td>
+                </tr>
+                <tr>
+                    <th>State</th>
+                    <td id="state-name"></td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td id="country-name"></td>
+                </tr>
+                <tr>
+                    <th>Timezone</th>
+                    <td id="timezone"></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Weather</th>
+                    
+                </tr>
+                <tr>
+                    <th>Temprature</th>
+                    <td id="temprature"></td>
+                </tr>
+                <tr>
+                    <th>Weather Condition</th>
+                    <td id="condition"></td>
+                </tr>
+                <tr>
+                    <th>Wind Speed</th>
+                    <td id="wind-speed"></td>
+                </tr>
+                
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <!-- JQUERY CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+        $('#weather-form').submit(function(event){
+            event.preventDefault();
+            var city = $('#city').val();
+            if($('#aqi').val()=="Yes"){
+                var aqi = 'yes';
+            }else{
+                var aqi = 'no';
+            }
+            $.ajax({url:"http://api.weatherapi.com/v1/current.json?key=0c86a34a4d6c493d81f114640223012&q="+city+"&aqi="+aqi,
+            success: function(result){
+                // $('#weather-result').html(JSON.stringify(result))
+                $('#weather-result').css('display','block');
+                $('#city-name').html(result.location.name);
+                $('#state-name').html(result.location.region);
+                $('#country-name').html(result.location.country);
+                $('#timezone').html(result.location.tz_id);
+                $('#temprature').html(result.current.temp_c + "oC / "+ result.current.temp_f + "oF");
+                $('#condition').html(result.current.condition.text);
+                $('#wind-speed').html(result.current.wind_mph + " Miles/Hr / "+ result.current.wind_kph+ " Km/Hr");
+            }
+            })
+        })
+    </script>
+</body>
+</html>
